@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:sistema_login/pages/home_page.dart';
 import '../dados_mock.dart';
-
+import 'cadastro_page.dart';
 
 class LoginPage  extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,7 +9,6 @@ class LoginPage  extends StatefulWidget {
   @override
   // O _ é Reservado significa privado
   State<LoginPage> createState() => _LoginPageState();
-
 
 }
 
@@ -30,7 +30,6 @@ void mostrarMensagem(String mensagem){
   );
 }
 
-
 void entrar(){
   String email = emailController.text.trim();
   String senha = senhaController.text;
@@ -42,8 +41,8 @@ void entrar(){
     return;
   }
 
-Map<String,String>? usuarioEncontrado;
 
+Map<String,String>? usuarioEncontrado;
 
   for(var usuario in usuarios){
     if(
@@ -51,13 +50,41 @@ Map<String,String>? usuarioEncontrado;
       usuario['senha'] == senha
     ){
 
-      mostrarMensagem('Login Realizado');
-
-      //usuarioEncontrado = usuario;
+      usuarioEncontrado = usuario;
       break;
     }
   }
+  if(usuarioEncontrado == null){
+    mostrarMensagem(
+      'E-mail ou Senha Incorretos.'
+
+    );
+    return;
+  }
+
+  String nome = usuarioEncontrado['nome'] ?? 'Usuario';
+
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder:(context) => HomePage(
+        nomeUsuario: nome,
+        emailUsuario: email,
+      ),
+    ),
+  );
+
+
 }
+
+
+void abrirCadastro(){
+  Navigator.push(context,
+  MaterialPageRoute(builder: (context) => const CadastroPage()),
+  );
+
+}
+
 
 
 
@@ -153,7 +180,7 @@ Map<String,String>? usuarioEncontrado;
             const SizedBox(height: 25,),
 
             OutlinedButton.icon(
-              onPressed: (){},
+              onPressed: abrirCadastro,
               icon: Icon(Icons.person_add),
               label: const Text('Criar usuário'),
               )
